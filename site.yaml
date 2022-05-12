@@ -1,0 +1,48 @@
+---
+
+
+- hosts: webservers
+  become: true
+  gather_facts: false
+  tasks:
+  
+  - name: update cache
+    apt:
+       update_cache: yes
+
+  - name: Download pip installer
+    get_url:
+      url: https://bootstrap.pypa.io/get-pip.py
+      dest: /tmp/get-pip.py
+  - name: install pip
+    shell:
+      /usr/bin/python3 /tmp/get-pip.py
+ 
+   
+  - name: install flask
+    pip: name=flask
+
+
+  - name: fetch application
+    git: repo=https://github.com/patrikarlos/NSO_A2.git/ dest=/opt/flask-demo
+  
+
+
+- hosts: HAproxy
+  gather_facts: yes
+  become: true
+  tasks:
+   - name: haproxy cache update
+     apt:
+      update_cache: yes
+
+   - name: haproxy installation
+     apt:
+      name: haproxy
+      state: absent
+           
+   - name: Restarting haproxy
+     service:
+       name: haproxy
+       state: restarted
+  
