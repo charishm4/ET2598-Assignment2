@@ -6,7 +6,7 @@ Host bastionNSO
  StrictHostKeyChecking no
  PasswordAuthentication no
 
-Host devhaproxy
+Host HAproxy
  User ubuntu
  HostName 89.46.83.111
  UserKnownHostsFile=~/dev/null
