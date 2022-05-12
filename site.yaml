@@ -1,48 +1,92 @@
 ---
 
+- hosts: HAproxy
+  gather_facts: yes
+  become: true
+  become_method: sudo
+
+  tasks:
+
+  - name: update apt cache
+    become: yes
+    apt:
+      update_cache: yes
+      cache_valid_time: 7200
+
+  - name: haproxy installation
+    become: true
+    apt:
+      name: haproxy
+      state: latest   
+
+  - name: upgrade the packages
+    apt:
+      update_cache: yes
+      upgrade: dist
+      force_apt_get: yes
+    
+
+  - name: Gather facts from servers
+    setup:
+      filter: ansible_default_ipv4.address   
+
+
+  - name: removing the content from haproxy.cfg
+    file:
+       path: "/etc/haproxy/haproxy.cfg"
+       state: absent
+
+
+  - name: Deploying HAProxy.cfg 
+    template:
+      src: /home/charishma/haproxy.cfg.j2
+      dest: "/etc/haproxy/haproxy.cfg"
+    notify:
+      - restart Haproxy
+
+  handlers:
+  - name: restart Haproxy
+    service:
+      name: haproxy
+      state: restarted
+  
 
 - hosts: webservers
   become: true
-  gather_facts: false
+  gather_facts: yes
   tasks:
   
   - name: update cache
     apt:
        update_cache: yes
 
-  - name: Download pip installer
-    get_url:
-      url: https://bootstrap.pypa.io/get-pip.py
-      dest: /tmp/get-pip.py
+  - name: uninstall pip
+    apt: 
+     name: python3-pip
+     state: absent
+     
+
   - name: install pip
-    shell:
-      /usr/bin/python3 /tmp/get-pip.py
- 
-   
+    become: true
+    apt: 
+     name: python3-pip
+     state: present
+     update_cache: true
+    
   - name: install flask
     pip: name=flask
 
 
   - name: fetch application
     git: repo=https://github.com/patrikarlos/NSO_A2.git/ dest=/opt/flask-demo
-  
 
 
-- hosts: HAproxy
-  gather_facts: yes
-  become: true
-  tasks:
-   - name: haproxy cache update
-     apt:
-      update_cache: yes
+#   - name: start flask
+#     shell: |
+#          export FLASK_APP=.\opt\flask-demo\application2.py
+#          export FLASK_RUN_HOST=0.0.0.0
+#          export FLASK_RUN_PORT=8080
+#          flask run
 
-   - name: haproxy installation
-     apt:
-      name: haproxy
-      state: absent
-           
-   - name: Restarting haproxy
-     service:
-       name: haproxy
-       state: restarted
+
   
