@@ -80,12 +80,7 @@
 
 
   - name: fetch application
-   # git: repo=https://github.com/patrikarlos/NSO_A2.git/ dest=/opt/flask-demo
-    fetch:
-        src: application2.py
-        dest: /home/charishma/application2.py
-        owner: ubuntu
-        mode: '0644'
+    git: repo=https://github.com/patrikarlos/NSO_A2.git/ dest=/opt/flask-demo
 
 
   - name: start flask
