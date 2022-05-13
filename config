@@ -6,6 +6,7 @@ Host bastionNSO
  StrictHostKeyChecking no
  PasswordAuthentication no
 
+
 Host HAproxy
  User ubuntu
  HostName 103.57.72.200
