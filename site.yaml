@@ -1,4 +1,6 @@
+
 ---
+
 
 - hosts: webservers
   gather_facts: yes
@@ -8,13 +10,14 @@
   become: true
   become_method: sudo
 
+# HAPROXY CONFIGURATION
+
   tasks:
 
   - name: update apt cache
     become: yes
     apt:
       update_cache: yes
-    
 
   - name: haproxy installation
     become: true
@@ -27,7 +30,8 @@
       update_cache: yes
       upgrade: dist
       force_apt_get: yes
-    
+    notify:
+        - run Haproxy   
 
   - name: Gather facts from servers
     setup:
@@ -38,23 +42,35 @@
     file:
        path: "/etc/haproxy/haproxy.cfg"
        state: absent
+    notify:
+     - restart haproxy
 
 
   - name: Deploying HAProxy.cfg 
     template:
-      src: /home/charishma/haproxy.cfg.j2
+      src: ./haproxy.cfg.j2
       dest: "/etc/haproxy/haproxy.cfg"
     notify:
-      - restart Haproxy
+      - restart haproxy
+      - run Haproxy
 
   handlers:
-  - name: restart Haproxy
+
+  - name: run Haproxy
+    service:
+        name: haproxy
+        state: started
+
+  - name: restart haproxy
     service:
       name: haproxy
       state: restarted
   
 
+
+
 - hosts: webservers
+  become: true
 
   tasks:
   
@@ -78,9 +94,9 @@
   - name: install flask
     pip: name=flask
 
-
   - name: fetch application
-    git: repo=https://github.com/patrikarlos/NSO_A2.git/ dest=/opt/flask-demo
+   # git: repo=https://github.com/patrikarlos/NSO_A2.git/ dest=/opt/flask-demo
+    copy: src=application2.py dest=./application2.py
 
 
   - name: start flask
