@@ -78,12 +78,6 @@
     apt:
        update_cache: yes
 
-  - name: uninstall pip
-    apt: 
-     name: python3-pip
-     state: absent
-     
-
   - name: install pip
     become: true
     apt: 
@@ -103,8 +97,8 @@
     shell: |
          export FLASK_APP=./application2.py
          export FLASK_RUN_HOST=0.0.0.0
-         export FLASK_RUN_PORT=8080
-         flask run
+         export FLASK_RUN_PORT=8210
+         flask run&
 
 
   
