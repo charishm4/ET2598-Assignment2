@@ -1,7 +1,6 @@
 
 ---
 
-
 - hosts: webservers
   gather_facts: yes
 
@@ -36,8 +35,6 @@
   - name: upgrade the packages
     apt:
       update_cache: yes
-      upgrade: dist
-      force_apt_get: yes
     notify:
         - run Haproxy   
 
@@ -75,7 +72,7 @@
       state: restarted
   
 
-
+# FLASK DEPLOYMENT
 
 - hosts: webservers
   become: true
