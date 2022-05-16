@@ -10,6 +10,14 @@
   become: true
   become_method: sudo
 
+  tasks:
+  - name: remove apt lock file
+    file:
+      state: absent
+      path: "/var/lib/dpkg/*"
+    become: yes
+
+
 # HAPROXY CONFIGURATION
 
   tasks:
@@ -92,6 +100,7 @@
    # git: repo=https://github.com/patrikarlos/NSO_A2.git/ dest=/opt/flask-demo
     copy: src=application2.py dest=./application2.py
 
+# start flask
 
   - name: start flask
     shell: |
