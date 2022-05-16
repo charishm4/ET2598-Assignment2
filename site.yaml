@@ -10,6 +10,11 @@
   become_method: sudo
 
   tasks:
+  - name: Remove apt lock frontend file
+    file:
+      state: absent
+      path: "/var/lib/dpkg/lock-frontend"
+    become: yes
   - name: remove apt lock file
     file:
       state: absent
@@ -33,6 +38,7 @@
       state: latest   
 
   - name: upgrade the packages
+    become: true
     apt:
       update_cache: yes
     notify:
