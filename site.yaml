@@ -1,30 +1,50 @@
 
 ---
-
 - hosts: webservers
   gather_facts: yes
+
+  tasks:
+
+  # - name: remove apt lock file
+  #   file:
+  #     state: absent
+  #     path: "/var/lib/dpkg/*"
+  #   become: yes
+  
+  - name: update cache
+    become: true
+    apt:
+    
+       update_cache: yes
+
+  - name: install pip
+    become: true
+    apt: 
+     name: python3-pip
+     state: present
+     update_cache: true
+    
+  - name: install flask
+    pip: name=flask
+
+  - name: fetch application
+   # git: repo=https://github.com/patrikarlos/NSO_A2.git/ dest=/opt/flask-demo
+    copy: src=application2.py dest=./application2.py
 
 - hosts: HAproxy
   gather_facts: yes
   become: true
   become_method: sudo
 
+
+
+# # HAPROXY CONFIGURATION
   tasks:
-  - name: Remove apt lock frontend file
-    file:
-      state: absent
-      path: "/var/lib/dpkg/lock-frontend"
-    become: yes
-  - name: remove apt lock file
-    file:
-      state: absent
-      path: "/var/lib/dpkg/*"
-    become: yes
 
-
-# HAPROXY CONFIGURATION
-
-  tasks:
+  - name: update cache
+    become: true
+    apt:
+    
 
   - name: update apt cache
     become: yes
@@ -49,7 +69,7 @@
       filter: ansible_default_ipv4.address   
 
 
-  - name: removing the content from haproxy.cfg
+  - name: removing haproxy.cfg
     file:
        path: "/etc/haproxy/haproxy.cfg"
        state: absent
@@ -57,9 +77,9 @@
      - restart haproxy
 
 
-  - name: Deploying HAProxy.cfg 
+  - name: Deploying haproxy.cfg 
     template:
-      src: ./haproxy.cfg.j2
+      src: haproxy.cfg.j2
       dest: "/etc/haproxy/haproxy.cfg"
     notify:
       - restart haproxy
@@ -85,23 +105,6 @@
 
   tasks:
   
-  - name: update cache
-    apt:
-       update_cache: yes
-
-  - name: install pip
-    become: true
-    apt: 
-     name: python3-pip
-     state: present
-     update_cache: true
-    
-  - name: install flask
-    pip: name=flask
-
-  - name: fetch application
-   # git: repo=https://github.com/patrikarlos/NSO_A2.git/ dest=/opt/flask-demo
-    copy: src=application2.py dest=./application2.py
 
 # start flask
 
@@ -112,5 +115,3 @@
          export FLASK_RUN_PORT=8080
          flask run&
 
-
-  
