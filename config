@@ -11,7 +11,7 @@ Host bastionNSO
 
 Host HAproxy
  User ubuntu
- HostName 188.212.109.70
+ HostName 188.95.227.209
  UserKnownHostsFile=~/dev/null
  IdentityFile ~/.ssh/id_rsa
  StrictHostKeyChecking no
@@ -19,7 +19,7 @@ Host HAproxy
 
 Host devA
  User ubuntu
- HostName 10.0.1.12
+ HostName 10.0.1.18
  IdentityFile ~/.ssh/id_rsa
  UserKnownHostsFile=~/dev/null
  StrictHostKeyChecking no
@@ -28,7 +28,7 @@ Host devA
 
 Host devB
  User ubuntu
- HostName 10.0.1.8
+ HostName 10.0.1.20
  IdentityFile ~/.ssh/id_rsa
  UserKnownHostsFile=~/dev/null
  StrictHostKeyChecking no
@@ -37,7 +37,7 @@ Host devB
 
 Host devC
  user ubuntu
- HostName 10.0.1.19
+ HostName 10.0.1.6
  IdentityFile ~/.ssh/id_rsa
  UserKnownHostsFile=~/dev/null
  StrictHostKeyChecking no
