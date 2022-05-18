@@ -41,7 +41,7 @@ backend mybackend
 	mode http
 	balance roundrobin
 {% for myservers in groups['webservers'] %}
-    server  {{ myservers }} {{ hostvars[myservers]['ansible_env'].SSH_CONNECTION.split(' ')[2] }}:80
+    server  {{ myservers }} {{ hostvars[myservers]['ansible_env'].SSH_CONNECTION.split(' ')[2] }}:8080
 {% endfor %}
 
 listen stats

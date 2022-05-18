@@ -5,11 +5,11 @@
 
   tasks:
 
-  # - name: remove apt lock file
-  #   file:
-  #     state: absent
-  #     path: "/var/lib/dpkg/*"
-  #   become: yes
+  - name: remove apt lock file
+    file:
+      state: absent
+      path: "/var/lib/dpkg/*"
+    become: yes
   
   - name: update cache
     become: true
